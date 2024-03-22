@@ -32,21 +32,8 @@ pub fn read_line(msg: &str) -> String {
     input.trim().to_string()
 }
 
-pub fn from_arr_to_tup<T: Copy>(arr: &[T; 4]) -> (T, T, T, T) {
-    (arr[0], arr[1], arr[2], arr[3])
-}
-
-pub fn pix_calc<T>(p1: (u16, u16, u16, T), p2: (u16, u16, u16, T)) -> (u16, u16, u16, T) {
-    (
-        (p1.0 + p2.0) / 2,
-        (p1.1 + p2.1) / 2,
-        (p1.2 + p2.2) / 2,
-        p1.3,
-    )
-}
-
 pub fn get_pixels(
-    buffers: Vec<ImageBuffer<Rgba<u16>, Vec<u16>>>,
+    buffers: &Vec<ImageBuffer<Rgba<u16>, Vec<u16>>>,
     x: u32,
     y: u32,
 ) -> Vec<Rgba<u16>> {
