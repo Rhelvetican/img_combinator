@@ -1,4 +1,4 @@
-use image::{io::Reader as ImageReader, ColorType, DynamicImage, ImageError};
+use image::{io::Reader as ImageReader, ColorType, DynamicImage, ImageBuffer, ImageError, Rgba};
 use std::io::{stdin, Error};
 
 pub fn read_image(path: &str) -> DynamicImage {
@@ -34,4 +34,42 @@ pub fn read_line(msg: &str) -> String {
 
 pub fn from_arr_to_tup<T: Copy>(arr: &[T; 4]) -> (T, T, T, T) {
     (arr[0], arr[1], arr[2], arr[3])
+}
+
+pub fn pix_calc<T>(p1: (u16, u16, u16, T), p2: (u16, u16, u16, T)) -> (u16, u16, u16, T) {
+    (
+        (p1.0 + p2.0) / 2,
+        (p1.1 + p2.1) / 2,
+        (p1.2 + p2.2) / 2,
+        p1.3,
+    )
+}
+
+pub fn get_pixels(
+    buffers: Vec<ImageBuffer<Rgba<u16>, Vec<u16>>>,
+    x: u32,
+    y: u32,
+) -> Vec<Rgba<u16>> {
+    let mut pixels: Vec<Rgba<u16>> = Vec::new();
+    for buffer in buffers {
+        pixels.push(*buffer.get_pixel(x, y));
+    }
+    pixels
+}
+
+pub fn get_avg_pixel(pixels: Vec<Rgba<u16>>) -> Rgba<u16> {
+    let mut avg_r = Vec::new();
+    let mut avg_g = Vec::new();
+    let mut avg_b = Vec::new();
+    for pixel in pixels {
+        avg_r.push(pixel[0]);
+        avg_g.push(pixel[1]);
+        avg_b.push(pixel[2]);
+    }
+    Rgba([
+        avg_r.iter().sum::<u16>() / avg_r.len() as u16,
+        avg_g.iter().sum::<u16>() / avg_g.len() as u16,
+        avg_b.iter().sum::<u16>() / avg_b.len() as u16,
+        255,
+    ])
 }
