@@ -36,8 +36,10 @@ fn main() -> Result<(), String> {
 
     let mut new_img: ImageBuffer<Rgba<u16>, Vec<u16>> = ImageBuffer::new(new_width, new_height);
 
+    let mode = CombinationMode::from_string(read_line("Enter combination mode:"));
+
     for (x, y, pixel) in new_img.enumerate_pixels_mut() {
-        *pixel = get_avg_pixel(get_pixels(&buffers, x, y));
+        *pixel = calc_pixel(get_pixels(&buffers, x, y), mode);
     }
 
     match new_img.save("output.png") {
