@@ -10,10 +10,10 @@ pub(crate) enum CombinationMode {
 
 impl CombinationMode {
     pub(super) fn from_str(s: &str) -> Self {
-        match s {
-            "Average" => CombinationMode::Average,
-            "Maximum" => CombinationMode::Maximum,
-            "minimum" => CombinationMode::Minimum,
+        match s.to_lowercase().as_str() {
+            "average" | "avg" => CombinationMode::Average,
+            "maximum" | "max" => CombinationMode::Maximum,
+            "minimum" | "min" => CombinationMode::Minimum,
             _ => CombinationMode::Average,
         }
     }
