@@ -11,7 +11,9 @@ image = { version = "0.25" }
 [profile.release]
 lto = "fat"
 codegen-units = 1
-strips = "symbols"
+strip = "symbols"
 debug = false
 overflow-checks = true
 opt-level = 3
+incremental = true
+panic = "abort"

@@ -1,16 +1,32 @@
 mod utils;
-use image::{ImageBuffer, Rgba};
-use std::vec::Vec;
+use image::{open, ImageBuffer, Rgba};
+use std::{
+    fs::{read_dir, DirBuilder},
+    vec::Vec,
+};
 use utils::*;
 
 fn main() -> Result<(), String> {
     let mut buffers: Vec<ImageBuffer<Rgba<u16>, Vec<u16>>> = Vec::new();
 
-    loop {
-        match read_line("Enter the path of the image: ").as_str() {
-            "exit" => break,
-            path => buffers.push(read_image(path).to_rgba16()),
+    let files = match read_dir("input") {
+        Ok(f) => f,
+        Err(e) => return Err(format!("Error: {}", e)),
+    };
+
+    for file in files {
+        let file = file.unwrap();
+        let path = file.path();
+        let img = match open(&path) {
+            Ok(i) => i,
+            Err(e) => {
+                DirBuilder::new().recursive(true).create("input").unwrap();
+                return Err(format!("Error: {}", e));
+            }
         };
+
+        let img = img.into_rgba16();
+        buffers.push(img);
     }
 
     let (new_width, new_height) = match buffers.iter().map(|b| b.dimensions()).min() {
